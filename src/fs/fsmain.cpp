@@ -6,7 +6,7 @@ using namespace std;
 
 int main() {
 
-	Fs::Fs fs;
+	update_fs([](const auto &m){ for (const auto &e: m) cout << e << endl; });
+	while (1); // cout << "SLEEPING" << endl;
 
-	
 }
