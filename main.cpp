@@ -28,7 +28,7 @@ int main() try {
 	cout << sys.get_free_ram() << endl;
 #endif
 
-#if 0
+#if 1
 	Proc::CpuStat cpu_stat;
 
 	while (1) {
