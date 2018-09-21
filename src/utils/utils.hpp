@@ -13,6 +13,7 @@ using std::cout, std::endl;
 
 extern "C" {
 	#include <glob.h>
+	#include <unistd.h>
 }
 
 #include <vector>
@@ -45,6 +46,18 @@ namespace utils::Linux {
 		globfree(&glob_result);
 		return filenames;
 	}
+
+
+	struct Fd {
+		Fd() = default;
+
+		Fd(const Fd &) 		   = delete;
+		Fd & operator=(const Fd &) = delete;
+
+		Fd(int fd) { if (fd < 0) throw std::system_error(errno, std::generic_category()); this->fd = fd; }
+		~Fd() { close(fd); }
+		int fd = -1;
+	};
 
 }
 
@@ -103,9 +116,12 @@ namespace utils::Line {
 
 		public:
 			using std::ifstream::basic_ifstream;
+			ifstream_l(const ifstream_l &) = delete;
+			ifstream_l & operator=(const ifstream_l &) = delete;
+
 			auto begin()     { return utils::Line::begin(*this); }
 			const auto end() { return utils::Line::end(*this);   }
-
+			// void each_line(std::function<void(Line &)> f) { std::for_each(begin(), end(), f); }
 	};
 
 }
@@ -150,6 +166,22 @@ namespace units {
 
 		template <typename T>
 		constexpr T kibibyte = 1024;
+
+
+		template <typename T>
+		constexpr T petabyte = 1000000000000000;
+
+		template <typename T>
+		constexpr T terabyte = 1000000000000;
+
+		template <typename T>
+		constexpr T gigabyte = 1000000000;
+
+		template <typename T>
+		constexpr T megabyte = 1000000;
+
+		template <typename T>
+		constexpr T kilobyte = 1000;
 	}
 
 	namespace Hz::magnitude_order {
@@ -200,6 +232,24 @@ namespace units {
 			return units::to_string(bytes, precision) + "B";
 		}
 
+		static std::string to_si(uint64_t bytes, int precision = 2) {
+
+			using namespace byte::magnitude_order;
+			using type = decltype(bytes);
+
+			if (bytes >= petabyte<type>)
+				throw std::invalid_argument("TODO !!!");
+			else if (bytes >= terabyte<type>)
+				return units::to_string(bytes / terabyte<float>, precision) + "TB";
+			else if (bytes >= gigabyte<type>)
+				return units::to_string(bytes / gigabyte<float>, precision) + "GB";
+			else if (bytes >= megabyte<type>)
+				return units::to_string(bytes / megabyte<float>, precision) + "MB";
+			else if (bytes >= kilobyte<type>)
+				return units::to_string(bytes / kilobyte<float>, precision) + "KB";
+
+			return units::to_string(bytes, precision) + "B";
+		}
 	}
 
 
