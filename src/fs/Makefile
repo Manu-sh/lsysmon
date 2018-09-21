@@ -5,7 +5,7 @@ LDLIBS=-lpthread
 .PHONY: all clean
 
 all:
-	$(CXX) $(CXXFLAGS) -o fsmainfs fsmain.cpp $(LDLIBS)
+	$(CXX) $(CXXFLAGS) -o fsmain fsmain.cpp $(LDLIBS)
 
 test: all
 	./fsmain
