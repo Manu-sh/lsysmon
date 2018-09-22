@@ -77,7 +77,9 @@ void Fs::on_mounted_fs(std::function<void(std::vector<Mounted> &)> callback) {
 
 			for (struct mntent *e; (e = getmntent_r(file, &mbuf, strbuf, sizeof strbuf)); ) {
 
-				// TODO find another way
+				// TODO find another way statfs()
+				// check discard any pseudo-filesystems
+
 				bool invalid = strcmp(e->mnt_fsname, "tmpfs") == 0 ||
 					strcmp(e->mnt_fsname, "proc")         == 0 ||
 					strcmp(e->mnt_fsname, "systemd")      >= 0 ||
