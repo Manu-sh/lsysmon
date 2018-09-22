@@ -2,7 +2,7 @@
 	#define _GNU_SOURCE
 #endif
 
-#include "../utils/utils.hpp"
+#include "../../utils/utils.hpp"
 
 #include <cassert>
 #include <string>
@@ -70,6 +70,7 @@ void Fs::on_mounted_fs(std::function<void(std::vector<Mounted> &)> callback) {
 	std::thread{[&callback]{ /* create a new thread */
 
 		constexpr static int EVENTS_SIZE = 1;
+
 		const static auto &get_mounted = [](std::vector<Mounted> &mnt) {
 
 			struct mntent mbuf{};
@@ -97,11 +98,13 @@ void Fs::on_mounted_fs(std::function<void(std::vector<Mounted> &)> callback) {
 					strcmp(e->mnt_fsname, "binfmt_misc")  >= 0;
 
 				if (invalid) continue;
+
 				mnt.emplace_back(e);
 			}
 
 			endmntent(file);
 		};
+
 
 		std::vector<Fs::Mounted> mnt;
 		Fd epoll_fd{epoll_create(EVENTS_SIZE)}, file_fd{open("/etc/mtab", O_RDONLY)};
