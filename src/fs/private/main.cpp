@@ -6,7 +6,7 @@ using namespace std;
 int main() {
 
 	// yes cout isn't syncronized it's just a test
-	update_fs([](const auto &m){
+	Fs::on_mounted_fs([](const auto &m){
 
 		for (const auto &e: m) {
 			cout << e << endl;

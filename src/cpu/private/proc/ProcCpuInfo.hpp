@@ -114,6 +114,8 @@ namespace Proc {
 			CpuInfo() {
 
 				utils::Line::ifstream_l proc_cpuinfo{"/proc/cpuinfo"};
+				proc_cpuinfo.default_exceptions();
+
 				std::vector<utils::Line::Line> entry_lines(12 * 4); // TODO mantenere uno stato per evitare realloc continue
 
 				for (const auto &l : proc_cpuinfo) {

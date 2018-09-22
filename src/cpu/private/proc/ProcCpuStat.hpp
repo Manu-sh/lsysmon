@@ -42,6 +42,8 @@ namespace Proc {
 			const static auto &cols = "\\s([0-9]+)"_ri;
 
 			utils::Line::ifstream_l proc_stat{"/proc/stat"};
+			proc_stat.default_exceptions();
+
 			std::vector<std::vector<uint32_t>> mtx(0);
 
 			for (const auto &line : proc_stat) {

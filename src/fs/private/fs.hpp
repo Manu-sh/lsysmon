@@ -21,40 +21,44 @@ extern "C" {
 	#include <fcntl.h>
 }
 
-#include <iostream>
-using std::cout, std::endl;
 
-// TODO filesystem details
-struct Mounted {
+namespace Fs {
 
-	struct SpaceInfo {
-		SpaceInfo(const std::filesystem::space_info &s)
-		   : capacity{s.capacity}, available{s.available} {}
-		std::string get_capacity()  const { return units::byte::to_iec(capacity); }
-		std::string get_used()      const { return units::byte::to_iec(capacity - available); }
-		std::string get_available() const { return units::byte::to_iec(available); }
-		const uintmax_t capacity, available;
+	struct Mounted {
+
+		struct SpaceInfo {
+			SpaceInfo(const std::filesystem::space_info &s)
+			: capacity{s.capacity}, available{s.available} {}
+			std::string get_capacity()  const { return units::byte::to_iec(capacity); }
+			std::string get_used()      const { return units::byte::to_iec(capacity - available); }
+			std::string get_available() const { return units::byte::to_iec(available); }
+			const uintmax_t capacity, available;
+		};
+
+		Mounted(struct mntent *mnt) {
+			assert(mnt);
+			this->dir    = mnt->mnt_dir;
+			this->type   = mnt->mnt_type;
+			this->fsname = mnt->mnt_fsname;
+		}
+
+		SpaceInfo space() const { return SpaceInfo(std::filesystem::space(this->dir)); }
+
+		std::string type;
+		std::string dir;
+		std::string fsname;
 	};
 
-	Mounted(struct mntent *mnt) {
-		assert(mnt);
-		this->dir    = mnt->mnt_dir;
-		this->type   = mnt->mnt_type;
-		this->fsname = mnt->mnt_fsname;
+	static std::ostream & operator<<(std::ostream &os, const Fs::Mounted &m) {
+		return os << "type: \"" << m.type << "\"\ndir: \"" << m.dir << "\"\nfsname: \"" << m.fsname << "\"";
 	}
 
-	SpaceInfo space() const { return SpaceInfo(std::filesystem::space(this->dir)); }
-
-	std::string type;
-	std::string dir;
-	std::string fsname;
-};
-
-static std::ostream & operator<<(std::ostream &os, const Mounted &m) {
-	return os << "type: \"" << m.type << "\"\ndir: \"" << m.dir << "\"\nfsname: \"" << m.fsname << "\"";
+	void on_mounted_fs(std::function<void(std::vector<Mounted> &)> callback);
 }
 
-void update_fs(std::function<void(std::vector<Mounted> &)> callback) {
+
+// TODO mv .cpp ?
+void Fs::on_mounted_fs(std::function<void(std::vector<Mounted> &)> callback) {
 
 	using utils::Linux::Fd;
 	using Epoll_event = struct epoll_event;
@@ -93,7 +97,7 @@ void update_fs(std::function<void(std::vector<Mounted> &)> callback) {
 			endmntent(file);
 		};
 
-		std::vector<Mounted> mnt;
+		std::vector<Fs::Mounted> mnt;
 		Fd epoll_fd{epoll_create(EVENTS_SIZE)}, file_fd{open("/etc/mtab", O_RDONLY)};
 		Epoll_event ev, events[EVENTS_SIZE];
 

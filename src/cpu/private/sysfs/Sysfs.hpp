@@ -50,7 +50,7 @@ Sysfs::CpuN::Cache::Cache::Cache(uint8_t cpu_n, uint8_t index_n) {
 
 	const std::string scan_path{SYSFS_CPU_PATH"/cpu" + std::to_string(cpu_n) + "/cache/index" + std::to_string(index_n) + "/"};
 	utils::Line::ifstream_l ifs;
-	ifs.exceptions(std::ifstream::failbit|std::ifstream::badbit);
+	ifs.default_exceptions();
 
 	for (uint_fast8_t i = UINT8_C(0); i < ARRAY_LENGTH; i++) {
 
@@ -107,7 +107,6 @@ namespace Sysfs::CpuN::Freq {
 	}
 
 }
-
 Sysfs::CpuN::Freq::Freq::Freq(uint8_t cpu_n) {
 
 	enum: uint8_t { CPUINFO_CUR_FREQ, SCALING_CUR_FREQ, CPUINFO_MIN_FREQ, CPUINFO_MAX_FREQ, ARRAY_LENGTH /*  N + 1 */ };
@@ -115,7 +114,7 @@ Sysfs::CpuN::Freq::Freq::Freq(uint8_t cpu_n) {
 
 	const std::string scan_path{SYSFS_CPU_PATH"/cpu" + std::to_string(cpu_n) + "/cpufreq/"};
 	utils::Line::ifstream_l ifs;
-	ifs.exceptions(std::ifstream::failbit|std::ifstream::badbit);
+	ifs.default_exceptions();
 
 	{
 		utils::Line::Line line;
@@ -174,7 +173,7 @@ Sysfs::CpuN::Topology::Topology::Topology(uint8_t cpu_n) {
 
 	const std::string scan_path{SYSFS_CPU_PATH"/cpu" + std::to_string(cpu_n) + "/topology/"};
 	utils::Line::ifstream_l ifs;
-	ifs.exceptions(std::ifstream::failbit|std::ifstream::badbit);
+	ifs.default_exceptions();
 
 	for (uint_fast8_t i = UINT8_C(0); i < ARRAY_LENGTH; i++) {
 

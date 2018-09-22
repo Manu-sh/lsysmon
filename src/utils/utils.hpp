@@ -98,8 +98,21 @@ namespace utils::Line {
 	const auto &npos = std::string::npos;
 
 	// getline from istream
-	static std::istream & operator>>(std::istream &is, Line &l) { 
-		return std::getline(is, l), is; 
+
+
+	/* Reaching the End-of-File sets the eofbit. But note that operations that reach 
+	   the End-of-File may also set the failbit if this makes them fail
+	   (thus setting both eofbit and failbit). */
+
+	static std::istream & operator>>(std::istream &is, Line &l) {
+
+		try {
+			std::getline(is, l);
+		} catch (std::ifstream::failure &e) {
+			if (!is.eof()) throw;
+		}
+
+		return is;
 	}
 
 	// is can't be const they aren't const iterator
@@ -119,9 +132,13 @@ namespace utils::Line {
 			ifstream_l(const ifstream_l &) = delete;
 			ifstream_l & operator=(const ifstream_l &) = delete;
 
+			void default_exceptions() { this->exceptions(std::ifstream::failbit|std::ifstream::badbit); }
 			auto begin()     { return utils::Line::begin(*this); }
 			const auto end() { return utils::Line::end(*this);   }
-			// void each_line(std::function<void(Line &)> f) { std::for_each(begin(), end(), f); }
+			
+			void each_line(std::function<void(const Line &)> f) {
+				std::for_each(this->begin(), this->end(), f); 
+			}
 	};
 
 }
