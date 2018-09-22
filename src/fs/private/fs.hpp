@@ -10,19 +10,18 @@
 #include <functional>
 
 #include <thread>
+
+#include <stdexcept>
 #include <filesystem>
 
 extern "C" {
 	#include <unistd.h>
 	#include <mntent.h>
+	#include <fcntl.h>
 	#include <sys/epoll.h>
 	#include <sys/types.h>
 	#include <sys/stat.h>
-	#include <fcntl.h>
-
-	// statfs()
-	#include <sys/vfs.h>
-	// #include <sys/statfs.h>
+	#include <sys/sysmacros.h>
 }
 
 
@@ -60,56 +59,51 @@ namespace Fs {
 	void on_mounted_fs(std::function<void(std::vector<Mounted> &)> callback);
 }
 
-
 // TODO mv .cpp ?
 void Fs::on_mounted_fs(std::function<void(std::vector<Mounted> &)> callback) {
 
 	using utils::Linux::Fd;
 	using Epoll_event = struct epoll_event;
 
+	// https://www.kernel.org/doc/Documentation/admin-guide/devices.txt
+	const static auto &is_scsi_dev = [] (const char *mnt_point) {
+
+		struct stat buf;
+
+		if (stat(mnt_point, &buf) == -1)
+			throw std::system_error(errno, std::generic_category());
+
+		return major(buf.st_dev) == 0x8U;
+	};
+
+	const static auto &get_mounted = [](std::vector<Mounted> &mnt) {
+
+		struct mntent mbuf{};
+		char strbuf[4096];
+		FILE *file = setmntent("/etc/mtab", "r");
+
+		assert(file);
+		mnt.clear();
+
+		for (struct mntent *e; (e = getmntent_r(file, &mbuf, strbuf, sizeof strbuf)); ) {
+
+			if (!is_scsi_dev(e->mnt_dir))
+				continue;
+
+			mnt.emplace_back(e);
+		}
+
+		endmntent(file);
+	};
+
 	std::thread{[&callback]{ /* create a new thread */
 
 		constexpr static int EVENTS_SIZE = 1;
-
-		const static auto &get_mounted = [](std::vector<Mounted> &mnt) {
-
-			struct mntent mbuf{};
-			char strbuf[4096];
-			FILE *file = setmntent("/etc/mtab", "r");
-
-			assert(file);
-			mnt.clear();
-
-			for (struct mntent *e; (e = getmntent_r(file, &mbuf, strbuf, sizeof strbuf)); ) {
-
-				// TODO find another way statfs()
-				// check discard any pseudo-filesystems
-
-				bool invalid = strcmp(e->mnt_fsname, "tmpfs") == 0 ||
-					strcmp(e->mnt_fsname, "proc")         == 0 ||
-					strcmp(e->mnt_fsname, "systemd")      >= 0 ||
-					strcmp(e->mnt_fsname, "cgroup")       >= 0 ||
-					strcmp(e->mnt_fsname, "devpts")       >= 0 ||
-					strcmp(e->mnt_fsname, "xproto")       >= 0 ||
-					strcmp(e->mnt_fsname, "mqueue")       >= 0 ||
-					strcmp(e->mnt_fsname, "debugfs")      >= 0 ||
-					strcmp(e->mnt_fsname, "configfs")     >= 0 ||
-					strcmp(e->mnt_fsname, "sysfs")        == 0 ||
-					strcmp(e->mnt_fsname, "binfmt_misc")  >= 0;
-
-				if (invalid) continue;
-
-				mnt.emplace_back(e);
-			}
-
-			endmntent(file);
-		};
-
-
 		std::vector<Fs::Mounted> mnt;
 		Fd epoll_fd{epoll_create(EVENTS_SIZE)}, file_fd{open("/etc/mtab", O_RDONLY)};
 		Epoll_event ev, events[EVENTS_SIZE];
 
+		/* monitor /etc/mtab for changes (since actually mtab is a symlink to /proc/self/mounts inotify dosn't work) */
 		ev.events = EPOLLPRI|EPOLLERR; 
 		ev.data.fd = file_fd.fd;
 
