@@ -116,13 +116,13 @@ namespace Proc {
 				utils::Line::ifstream_l proc_cpuinfo{"/proc/cpuinfo"};
 				proc_cpuinfo.default_exceptions();
 
-				std::vector<utils::Line::Line> entry_lines(12 * 4); // TODO mantenere uno stato per evitare realloc continue
+				std::vector<utils::Line::Line> entry_lines(12 * 4); /* cpu_N lines into /proc/cpuinfo */
 
 				for (const auto &l : proc_cpuinfo) {
 
 					entry_lines.emplace_back(l);
 
-					if (l.empty()) {
+					if (l.empty()) { /* end of cpu_N lines (\n) */
 						vct.emplace_back(entry_lines);
 						entry_lines.clear();
 					}

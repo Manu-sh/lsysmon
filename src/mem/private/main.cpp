@@ -6,5 +6,6 @@ using namespace std;
 int main() {
 
 	Proc::MemInfo meminfo;
+	cout << meminfo << endl;
 
 }

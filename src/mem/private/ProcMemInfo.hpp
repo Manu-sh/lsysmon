@@ -10,6 +10,7 @@
 #include "../../utils/utils.hpp"
 #include "../../utils/regex_utils.hpp"
 
+/* TODO finire */
 namespace Proc {
 
 	// literal constructor for case insensitive regex
@@ -28,82 +29,77 @@ namespace Proc {
 		ARRAY_LENGTH /* LENGTH = N + 1 */
 	};
 
-#if 0
 	struct MemInfo {
 
 		const static char *entry_name[ARRAY_LENGTH];
 		const static std::regex line_reg[ARRAY_LENGTH];
 
-		explicit MemInfo(const std::vector<utils::Line::Line> &line) {
+		explicit MemInfo() {
 
-			entries.reserve(ARRAY_LENGTH);
-			for (uint32_t i = 0; i < ARRAY_LENGTH; i++) {
+			utils::Line::ifstream_l proc_meminfo{"/proc/meminfo"};
+			proc_meminfo.default_exceptions();
+
+			for (uint_fast8_t i = 0; i < ARRAY_LENGTH; i++) {
 
 				std::smatch match;
-				for (uint32_t j = 0; j < line.size(); j++)
-					if (std::regex_search(line[j], match, line_reg[i]))
+
+				for (const auto &line : proc_meminfo)
+					if (std::regex_search(line, match, line_reg[i]))
 						break;
-
+				
 				if (match.size() <= 1) 
-					throw std::runtime_error("missing cpu entry " + std::string{entry_name[i]});
+					throw std::runtime_error("missing meminfo entry " + std::string{entry_name[i]});
 
-				entries.push_back( (uint32_t)std::stoul(match[1].str()) );
+				entries.push_back((uint64_t)std::stoul(match[1].str()));
 			}
 
 		}
 
 		friend std::ostream & operator<<(std::ostream &os, const MemInfo &ref) {
 
+			/* kB -> KiB */
+			const static auto &to_human = [](uint64_t kB) { 
+				return units::byte::to_iec(
+					units::KiB::to_B(kB)
+				); 
+			};
+
 			return os <<
-				entry_name[PROCESSOR]   << ref.entries[PROCESSOR]   << "\n" <<
-				entry_name[VENDOR_ID]   << ref.entries[VENDOR_ID]   << "\n" <<
-				entry_name[CPU_FAMILY]  << ref.entries[CPU_FAMILY]  << "\n" <<
-				entry_name[MODEL]       << ref.entries[MODEL]       << "\n" <<
-				entry_name[PHYSICAL_ID] << ref.entries[PHYSICAL_ID] << "\n" <<
-				entry_name[SIBILINGS]   << ref.entries[SIBILINGS]   << "\n" <<
-				entry_name[CORE_ID]     << ref.entries[CORE_ID]     << "\n" <<
-				entry_name[CPU_CORES]   << ref.entries[CPU_CORES]   << "\n" <<
-				entry_name[CPU_MHZ]     << ref.entries[CPU_MHZ]     << "\n" <<
-				entry_name[CACHE_SIZE]  << ref.entries[CACHE_SIZE]  << "\n" <<
-				entry_name[MODEL_NAME]  << ref.entries[MODEL_NAME]  << "\n" <<
-				entry_name[FLAGS]       << ref.entries[FLAGS]       << "\n";
+				entry_name[MEMTOTAL]      << to_human(ref.entries[MEMTOTAL])     << "\n" <<
+				entry_name[MEMFREE]       << to_human(ref.entries[MEMFREE])      << "\n" <<
+				entry_name[MEMAVAILABLE]  << to_human(ref.entries[MEMAVAILABLE]) << "\n" <<
+				entry_name[BUFFERS]       << to_human(ref.entries[BUFFERS])      << "\n" <<
+				entry_name[CACHED]        << to_human(ref.entries[CACHED])       << "\n" <<
+				entry_name[SWAPCACHED]    << to_human(ref.entries[SWAPCACHED])   << "\n" <<
+				entry_name[SWAPTOTAL]     << to_human(ref.entries[SWAPTOTAL])    << "\n" <<
+				entry_name[SWAPFREE]      << to_human(ref.entries[SWAPFREE])     << "\n";
 
 		}
 
-		std::vector<uint32_t> entries;
+		std::vector<uint64_t> entries;
 
 	};
 
-	// TODO replace with real suitables names || delete
 	const char *MemInfo::entry_name[ARRAY_LENGTH] {
-		[PROCESSOR]   = "PROCESSOR   ",
-		[VENDOR_ID]   = "VENDOR_ID   ",
-		[CPU_FAMILY]  = "CPU_FAMILY  ",
-		[MODEL]       = "MODEL       ",
-		[PHYSICAL_ID] = "PHYSICAL_ID ",
-		[SIBILINGS]   = "SIBILINGS   ",
-		[CORE_ID]     = "CORE_ID     ",
-		[CPU_CORES]   = "CPU_CORES   ",
-		[CPU_MHZ]     = "CPU_MHZ     ",
-		[CACHE_SIZE]  = "CACHE_SIZE  ",
-		[MODEL_NAME]  = "MODEL_NAME  ",
-		[FLAGS]       = "FLAGS       "
+		[MEMTOTAL]     = "MEMTOTAL     ",
+		[MEMFREE]      = "MEMFREE      ",
+		[MEMAVAILABLE] = "MEMAVAILABLE ",
+		[BUFFERS]      = "BUFFERS      ",
+		[CACHED]       = "CACHED       ",
+		[SWAPCACHED]   = "SWAPCACHED   ",
+		[SWAPTOTAL]    = "SWAPTOTAL    ",
+		[SWAPFREE]     = "SWAPFREE     "
 	};
 
 	const std::regex MemInfo::line_reg[ARRAY_LENGTH] {
-		[PROCESSOR]   = R"(^processor\s*:\s*(.*))"_ri,
-		[VENDOR_ID]   = R"(^vendor_id\s*:\s*(.*))"_ri,
-		[CPU_FAMILY]  = R"(^cpu\s+family\s*:\s*(.*))"_ri,
-		[MODEL]       = R"(^model\s*:\s*(.*))"_ri,
-		[PHYSICAL_ID] = R"(^physical\s+id\s*:\s*(.*))"_ri,
-		[SIBILINGS]   = R"(^siblings\s*:\s*(.*))"_ri,
-		[CORE_ID]     = R"(^core\s+id\s*:\s*(.*))"_ri,
-		[CPU_CORES]   = R"(^cpu\s+cores\s*:\s*(.*))"_ri,
-		[CPU_MHZ]     = R"(^cpu\s+mhz\s*:\s*(.*))"_ri,
-		[CACHE_SIZE]  = R"(^cache\s+size\s*:\s*(.*))"_ri,
-		[MODEL_NAME]  = R"(^model\s+name\s*:\s*(.*))"_ri,
-		[FLAGS]       = R"(^flags\s*:\s*(.*))"_ri
+		[MEMTOTAL]     = R"(^memtotal\s*:\s*(.*)kb)"_ri,
+		[MEMFREE]      = R"(^memfree\s*:\s*(.*)kb)"_ri,
+		[MEMAVAILABLE] = R"(^memavailable\s*:\s*(.*)kb)"_ri,
+		[BUFFERS]      = R"(^buffers\s*:\s*(.*)kb)"_ri,
+		[CACHED]       = R"(^cached\s*:\s*(.*)kb)"_ri,
+		[SWAPCACHED]   = R"(^swapcached\s*:\s*(.*)kb)"_ri,
+		[SWAPTOTAL]    = R"(^swaptotal\s*:\s*(.*)kb)"_ri,
+		[SWAPFREE]     = R"(^swapfree\s*:\s*(.*)kb)"_ri
 	};
-#endif
 
 }

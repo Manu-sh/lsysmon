@@ -227,6 +227,23 @@ namespace units {
 	}
 
 
+	namespace kB {
+
+		template <typename T>
+		static inline constexpr auto to_B(T kB) { 
+			return kB * 1000; 
+		}
+
+	}
+
+	namespace KiB {
+
+		template <typename T>
+		static inline constexpr auto to_B(T KiB) { 
+			return KiB * 1024; 
+		}
+
+	}
 
 	namespace byte {
 
