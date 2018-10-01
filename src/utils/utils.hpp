@@ -47,10 +47,9 @@ namespace utils::Linux {
 		return filenames;
 	}
 
-
 	struct Fd {
-		Fd() = default;
 
+		Fd() = default;
 		Fd(const Fd &) 		   = delete;
 		Fd & operator=(const Fd &) = delete;
 
@@ -225,7 +224,6 @@ namespace units {
 		}
 
 	}
-
 
 	namespace kB {
 

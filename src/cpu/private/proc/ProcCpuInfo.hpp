@@ -113,22 +113,20 @@ namespace Proc {
 		public:
 			CpuInfo() {
 
+				std::vector<utils::Line::Line> cpu_n_entry_lines(12 * 4); /* cpu_N lines into /proc/cpuinfo */
 				utils::Line::ifstream_l proc_cpuinfo{"/proc/cpuinfo"};
 				proc_cpuinfo.default_exceptions();
 
-				std::vector<utils::Line::Line> entry_lines(12 * 4); /* cpu_N lines into /proc/cpuinfo */
-
 				for (const auto &l : proc_cpuinfo) {
 
-					entry_lines.emplace_back(l);
+					cpu_n_entry_lines.emplace_back(l);
 
 					if (l.empty()) { /* end of cpu_N lines (\n) */
-						vct.emplace_back(entry_lines);
-						entry_lines.clear();
+						vct.emplace_back(cpu_n_entry_lines);
+						cpu_n_entry_lines.clear();
 					}
 				}
 
-				entry_lines.shrink_to_fit();
 			}
 
 			friend std::ostream & operator<<(std::ostream &os, const CpuInfo &c) {

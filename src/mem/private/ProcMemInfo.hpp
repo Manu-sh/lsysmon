@@ -10,7 +10,6 @@
 #include "../../utils/utils.hpp"
 #include "../../utils/regex_utils.hpp"
 
-/* TODO finire */
 namespace Proc {
 
 	// literal constructor for case insensitive regex
@@ -25,6 +24,7 @@ namespace Proc {
 		SWAPCACHED,
 		SWAPTOTAL,
 		SWAPFREE,
+		SHMEM,
 
 		ARRAY_LENGTH /* LENGTH = N + 1 */
 	};
@@ -57,10 +57,9 @@ namespace Proc {
 
 		friend std::ostream & operator<<(std::ostream &os, const MemInfo &ref) {
 
-			/* kB -> KiB */
 			const static auto &to_human = [](uint64_t kB) { 
 				return units::byte::to_iec(
-					units::KiB::to_B(kB)
+					units::KiB::to_B(kB) /* kB -> KiB */
 				); 
 			};
 
@@ -72,7 +71,8 @@ namespace Proc {
 				entry_name[CACHED]        << to_human(ref.entries[CACHED])       << "\n" <<
 				entry_name[SWAPCACHED]    << to_human(ref.entries[SWAPCACHED])   << "\n" <<
 				entry_name[SWAPTOTAL]     << to_human(ref.entries[SWAPTOTAL])    << "\n" <<
-				entry_name[SWAPFREE]      << to_human(ref.entries[SWAPFREE])     << "\n";
+				entry_name[SWAPFREE]      << to_human(ref.entries[SWAPFREE])     << "\n" <<
+				entry_name[SHMEM]         << to_human(ref.entries[SHMEM])        << "\n";
 
 		}
 
@@ -88,7 +88,8 @@ namespace Proc {
 		[CACHED]       = "CACHED       ",
 		[SWAPCACHED]   = "SWAPCACHED   ",
 		[SWAPTOTAL]    = "SWAPTOTAL    ",
-		[SWAPFREE]     = "SWAPFREE     "
+		[SWAPFREE]     = "SWAPFREE     ",
+		[SHMEM]        = "SHMEM        "
 	};
 
 	const std::regex MemInfo::line_reg[ARRAY_LENGTH] {
@@ -99,7 +100,8 @@ namespace Proc {
 		[CACHED]       = R"(^cached\s*:\s*(.*)kb)"_ri,
 		[SWAPCACHED]   = R"(^swapcached\s*:\s*(.*)kb)"_ri,
 		[SWAPTOTAL]    = R"(^swaptotal\s*:\s*(.*)kb)"_ri,
-		[SWAPFREE]     = R"(^swapfree\s*:\s*(.*)kb)"_ri
+		[SWAPFREE]     = R"(^swapfree\s*:\s*(.*)kb)"_ri,
+		[SHMEM]        = R"(^shmem\s*:\s*(.*)kb)"_ri
 	};
 
 }
