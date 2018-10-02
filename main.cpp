@@ -22,12 +22,6 @@ static void progress(uint_fast32_t width, uint_fast32_t pct_progress, std::ostre
 
 int main() try {
 
-#if 0
-	Linux::Sysinfo sys;
-	cout << sys.get_used_ram() << endl;
-	cout << sys.get_free_ram() << endl;
-#endif
-
 #if 1
 	Proc::CpuStat cpu_stat;
 
@@ -58,14 +52,7 @@ int main() try {
 		system("clear");
 		cout << "CURRENT PID: " << getpid() << endl;
 
-		const Linux::Sysinfo sysinfo;
 		const Proc::CpuInfo cpuinfo;
-
-		cout << "ram:" << endl;
-		cout << "\ttotal " << sysinfo.get_total_ram() << endl;
-		cout << "\tusage " << sysinfo.get_used_ram()  << endl;
-		cout << "\tfree "  << sysinfo.get_free_ram()  << endl;
-		cout << "uptime: " << sysinfo.get_uptime()    << endl;
 
 		{
 			const int cpu_n = 0;
