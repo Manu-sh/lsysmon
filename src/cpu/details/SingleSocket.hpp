@@ -11,9 +11,9 @@
 
 namespace Cpu::Details::SingleSocket {
 
-	using Cpu::Details::Sysfs::CpuN::Cache::Cache;
-	using Cpu::Details::Sysfs::CpuN::Topology::Topology;
-	using Cpu::Details::Sysfs::CpuN::Freq::Freq;
+	using Sysfs::CpuN::Cache::Cache;
+	using Sysfs::CpuN::Topology::Topology;
+	using Sysfs::CpuN::Freq::Freq;
 
 	class Core: Freq, Topology {
 
