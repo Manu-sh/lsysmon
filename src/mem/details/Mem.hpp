@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <stdexcept>
-#include <iostream>
 #include <fstream>
 #include <cstdint>
 #include <regex>
@@ -10,7 +9,7 @@
 #include "../../utils/utils.hpp"
 #include "../../utils/regex_utils.hpp"
 
-namespace Proc {
+namespace Mem::Details::Proc {
 
 	// literal constructor for case insensitive regex
 	using regex_utils::operator""_ri;

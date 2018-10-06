@@ -25,7 +25,7 @@ extern "C" {
 }
 
 
-namespace Fs {
+namespace Fs::Details {
 
 	struct Mounted {
 
@@ -52,15 +52,14 @@ namespace Fs {
 		std::string fsname;
 	};
 
-	static std::ostream & operator<<(std::ostream &os, const Fs::Mounted &m) {
+	static std::ostream & operator<<(std::ostream &os, const Fs::Details::Mounted &m) {
 		return os << "type: \"" << m.type << "\"\ndir: \"" << m.dir << "\"\nfsname: \"" << m.fsname << "\"";
 	}
 
 	void on_mounted_fs(std::function<void(std::vector<Mounted> &)> callback);
 }
 
-// TODO mv .cpp ?
-void Fs::on_mounted_fs(std::function<void(std::vector<Mounted> &)> callback) {
+void Fs::Details::on_mounted_fs(std::function<void(std::vector<Mounted> &)> callback) {
 
 	using utils::Linux::Fd;
 	using Epoll_event = struct epoll_event;
@@ -99,7 +98,7 @@ void Fs::on_mounted_fs(std::function<void(std::vector<Mounted> &)> callback) {
 	std::thread{[&callback]{ /* create a new thread */
 
 		constexpr static int EVENTS_SIZE = 1;
-		std::vector<Fs::Mounted> mnt;
+		std::vector<Fs::Details::Mounted> mnt;
 		Fd epoll_fd{epoll_create(EVENTS_SIZE)}, file_fd{open("/etc/mtab", O_RDONLY)};
 		Epoll_event ev, events[EVENTS_SIZE];
 

@@ -13,3 +13,5 @@
 	cpu architecture  [OK]
 	cpu endianess     (?)
 	cpu VT-X          [OK]
+
+	cpu temperature   (?)

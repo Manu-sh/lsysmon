@@ -13,7 +13,7 @@
 #include "../../../utils/utils.hpp"
 #include "../../../utils/regex_utils.hpp"
 
-namespace Proc {
+namespace Cpu::Details::Proc {
 
 	using regex_utils::operator""_ri;
 

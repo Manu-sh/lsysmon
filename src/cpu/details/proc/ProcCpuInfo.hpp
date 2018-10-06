@@ -10,7 +10,7 @@
 #include "../../../utils/utils.hpp"
 #include "../../../utils/regex_utils.hpp"
 
-namespace Proc {
+namespace Cpu::Details::Proc {
 
 	// literal constructor for case insensitive regex
 	using regex_utils::operator""_ri;

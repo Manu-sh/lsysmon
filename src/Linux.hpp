@@ -8,6 +8,8 @@ extern "C" {
 
 #include "utils/utils.hpp"
 #include "cpu/Cpu.hpp"
+#include "fs/Fs.hpp"
+#include "mem/Mem.hpp"
 
 #include <iostream>
 using std::endl, std::cout;

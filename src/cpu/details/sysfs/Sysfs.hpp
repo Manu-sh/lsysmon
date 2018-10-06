@@ -8,14 +8,13 @@
 #include "../../../utils/utils.hpp"
 #include "../../../utils/exceptions.hpp"
 
-
 #define SYSFS_CPU_PATH "/sys/devices/system/cpu"
 
 using std::endl, std::cout;
 
 
 /* https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-devices-system-cpu */
-namespace Sysfs::CpuN::Cache {
+namespace Cpu::Details::Sysfs::CpuN::Cache {
 
 	struct Cache {
 
@@ -43,7 +42,7 @@ namespace Sysfs::CpuN::Cache {
 
 }
 
-Sysfs::CpuN::Cache::Cache::Cache(uint8_t cpu_n, uint8_t index_n) {
+Cpu::Details::Sysfs::CpuN::Cache::Cache::Cache(uint8_t cpu_n, uint8_t index_n) {
 
 	enum: uint8_t { LEVEL, TYPE, SIZE, ARRAY_LENGTH /*  N + 1 */ };
 	const static std::string fname[ARRAY_LENGTH] { "level", "type", "size" };
@@ -89,7 +88,7 @@ Sysfs::CpuN::Cache::Cache::Cache(uint8_t cpu_n, uint8_t index_n) {
 }
 
 /* https://www.kernel.org/doc/Documentation/cpu-freq/user-guide.txt */
-namespace Sysfs::CpuN::Freq {
+namespace Cpu::Details::Sysfs::CpuN::Freq {
 
 	struct Freq {
 		explicit Freq(uint8_t cpu_n);
@@ -107,7 +106,8 @@ namespace Sysfs::CpuN::Freq {
 	}
 
 }
-Sysfs::CpuN::Freq::Freq::Freq(uint8_t cpu_n) {
+
+Cpu::Details::Sysfs::CpuN::Freq::Freq::Freq(uint8_t cpu_n) {
 
 	enum: uint8_t { CPUINFO_CUR_FREQ, SCALING_CUR_FREQ, CPUINFO_MIN_FREQ, CPUINFO_MAX_FREQ, ARRAY_LENGTH /*  N + 1 */ };
 	const static std::string fname[ARRAY_LENGTH] { "cpuinfo_cur_freq", "scaling_cur_freq", "cpuinfo_min_freq", "cpuinfo_max_freq" };
@@ -153,7 +153,7 @@ Sysfs::CpuN::Freq::Freq::Freq(uint8_t cpu_n) {
 
 
 /* https://www.kernel.org/doc/Documentation/cputopology.txt */
-namespace Sysfs::CpuN::Topology {
+namespace Cpu::Details::Sysfs::CpuN::Topology {
 
 	struct Topology {
 		explicit Topology(uint8_t cpu_n);
@@ -166,7 +166,7 @@ namespace Sysfs::CpuN::Topology {
 }
 
 // TODO expand range function !!! split(..., "-,"); ?
-Sysfs::CpuN::Topology::Topology::Topology(uint8_t cpu_n) {
+Cpu::Details::Sysfs::CpuN::Topology::Topology::Topology(uint8_t cpu_n) {
 
 	enum: uint8_t { PHYSICAL_PACKAGE_ID, ARRAY_LENGTH /*  N + 1 */ };
 	const static std::string fname[] { "physical_package_id" };
