@@ -15,18 +15,17 @@ using regex_utils::operator""_ri;
 enum: uint8_t { USER, NICE, SYSTEM, IDLE, IO_WAIT, IRQ, SOFT_IRQ };
 static inline std::vector<std::vector<uint32_t>> map_proc_stat();
 
-
 class _Stat: public Stat {
 
 	public:
-		std::vector<float> pct_usage() override;
+		std::vector<float> pct_usage() const override;
 
 	private:
 		// prev_idle, prev_total
-		std::vector<std::pair<uint32_t,uint32_t>> hold_cpu_stats;
+		mutable std::vector<std::pair<uint32_t,uint32_t>> hold_cpu_stats;
 };
 
-std::vector<float> _Stat::pct_usage() {
+std::vector<float> _Stat::pct_usage() const {
 
 	// const static float USER_HZ = sysconf(_SC_CLK_TCK);
 

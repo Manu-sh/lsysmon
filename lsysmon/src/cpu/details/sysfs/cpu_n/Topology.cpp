@@ -3,13 +3,22 @@
 
 #include "../../../../utils/utils.hpp"
 
-using namespace Cpu::Details::Sysfs::CpuN::Topology;
+namespace Self = Cpu::Details::Sysfs::CpuN::Topology;
+using namespace Self;
 
-std::ostream & operator<<(std::ostream &os, const Topology &t) {
+std::ostream & Self::operator<<(std::ostream &os, const Topology &t) {
 	return os << "physical_package_id: " << (short)t.physical_package_id;
 }
 
-const Topology & get_topology(uint8_t cpu_n) {
+bool Self::operator==(const Topology &a, const Topology &b) {
+	return a.physical_package_id == b.physical_package_id;
+}
+
+bool Self::operator!=(const Topology &a, const Topology &b) {
+	return !(a == b);
+}
+
+Topology Self::get_topology(uint8_t cpu_n) {
 
 	Topology top;
 

@@ -3,16 +3,17 @@
 
 #include "../../../../utils/utils.hpp"
 
-using namespace Cpu::Details::Sysfs::CpuN::Freq;
+namespace Self = Cpu::Details::Sysfs::CpuN::Freq;
+using namespace Self;
 
-std::ostream & operator<<(std::ostream &os, const Freq &f) {
+std::ostream & Self::operator<<(std::ostream &os, const Freq &f) {
 	return os <<
 		"cpuinfo_min_freq (KHz): " << f.cpuinfo_min_freq << "\n" <<
 		"cpuinfo_max_freq (KHz): " << f.cpuinfo_max_freq << "\n" <<
 		"scaling_cur_freq (KHz): " << f.scaling_cur_freq;
 }
 
-const Freq & get_freq(uint8_t cpu_n) {
+Freq Self::get_freq(uint8_t cpu_n) {
 
 	Freq freq;
 	enum: uint8_t { CPUINFO_CUR_FREQ, SCALING_CUR_FREQ, CPUINFO_MIN_FREQ, CPUINFO_MAX_FREQ, ARRAY_LENGTH /*  N + 1 */ };

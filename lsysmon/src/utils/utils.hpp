@@ -26,7 +26,7 @@ namespace utils::Linux {
 	// https://stackoverflow.com/questions/8401777/simple-glob-in-c-on-unix-system
 	//  MT-Unsafe !!!
 
-	std::vector<std::string> glob(const std::string &pattern) {
+	static std::vector<std::string> glob(const std::string &pattern) {
 
 		// glob struct resides on the stack
 		glob_t glob_result;

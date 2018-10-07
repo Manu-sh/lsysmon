@@ -4,7 +4,8 @@
 #include "../../../../utils/utils.hpp"
 #include "../../../../utils/exceptions.hpp"
 
-using namespace Cpu::Details::Sysfs::CpuN::Cache;
+namespace Self = Cpu::Details::Sysfs::CpuN::Cache;
+using namespace Self; /* this namespace */
 
 const std::string_view type_name[ARRAY_LENGTH] {
 	"Instruction",
@@ -12,24 +13,8 @@ const std::string_view type_name[ARRAY_LENGTH] {
 	"Unified"
 };
 
-std::ostream & operator<<(std::ostream &os, const Cache &c) {
-	return os <<
-		"level:              " << (short)c.level      	      << "\n" <<
-		"type:               " << type_name[c.type]         << "\n" <<
-		"size (kB):          " << c.size;
-}
+static inline Cache _todo(Cache &cache, uint8_t cpu_n, uint8_t index_n) {
 
-bool operator==(const Cache &a, const Cache &b) {
-	return a.id == b.id && a.level == b.level;
-}
-
-bool operator!=(const Cache &a, const Cache &b) {
-	return ! (a == b);
-}
-
-static inline const Cache & get_cache(uint8_t cpu_n, uint8_t index_n) {
-
-	Cache cache;
 	enum: uint8_t { LEVEL, TYPE, SIZE, ARRAY_LENGTH /*  N + 1 */ };
 	const static std::string fname[ARRAY_LENGTH] { "level", "type", "size" };
 
@@ -71,10 +56,20 @@ static inline const Cache & get_cache(uint8_t cpu_n, uint8_t index_n) {
 	}
 
 	return cache;
-
 }
 
-std::vector<Cache> get_cache(uint8_t cpu_n) {
+
+bool Self::operator==(const Cache &a, const Cache &b) { return a.id == b.id && a.level == b.level; }
+bool Self::operator!=(const Cache &a, const Cache &b) { return ! (a == b); }
+
+std::ostream & Self::operator<<(std::ostream &os, const Cache &c) {
+	return os <<
+		"level:              " << (short)c.level     << "\n" <<
+		"type:               " << type_name[c.type]  << "\n" <<
+		"size (kB):          " << c.size;
+}
+
+std::vector<Cache> Self::get_cache(uint8_t cpu_n) {
 
 	std::vector<Cache> cpu_cache;
 
@@ -84,9 +79,10 @@ std::vector<Cache> get_cache(uint8_t cpu_n) {
 		"/cache/index[0-9]*"
 	).size();
 
-	for (uint_fast8_t j = UINT8_C(0); j < cache_idx; j++)
-		cpu_cache.emplace_back( get_cache(cpu_n, j) );
+	for (uint_fast8_t j = UINT8_C(0); j < cache_idx; j++) {
+		Cache cache;
+		cpu_cache.push_back( _todo(cache, cpu_n, j) );
+	}
 
 	return cpu_cache;
-
 }
