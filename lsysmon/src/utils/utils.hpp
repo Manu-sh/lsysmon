@@ -128,8 +128,6 @@ namespace utils::Line {
 
 		public:
 			using std::ifstream::ifstream;
-
-			// ifstream_l() = default;
 			ifstream_l(const ifstream_l &) = delete;
 			ifstream_l & operator=(const ifstream_l &) = delete;
 
