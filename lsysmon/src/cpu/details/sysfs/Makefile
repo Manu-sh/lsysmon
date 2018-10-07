@@ -3,7 +3,7 @@ CXXFLAGS=-O3 -pipe -ffast-math -Wall -Wextra -D_REENTRANT -std=c++17 -Wno-unused
 .PHONY: all clean
 
 all:
-	$(CXX) $(CXXFLAGS) -o main main.cpp cpu_n/Topology.cpp #cpu_n/Freq.cpp # cpu_n/Cache.cpp 
+	$(CXX) $(CXXFLAGS) -o main main.cpp ../proc/Stat.cpp #../proc/CpuInfo.cpp #cpu_n/Topology.cpp #cpu_n/Freq.cpp # cpu_n/Cache.cpp 
 
 test: all
 	./main

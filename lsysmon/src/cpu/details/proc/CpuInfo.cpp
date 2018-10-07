@@ -3,54 +3,16 @@
 #include "../../../utils/regex_utils.hpp"
 #include "../../../utils/utils.hpp"
 
-using namespace Cpu::Details::Proc::CpuInfo;
+namespace Self = Cpu::Details::Proc::CpuInfo;
+using namespace Self;
+
 using regex_utils::operator""_ri;
-
-std::ostream & operator<<(std::ostream &os, const CpuEntry &ref) {
-
-	return os <<
-		_CpuEntry::entry_name[PROCESSOR]   << ref.entries[PROCESSOR]   << "\n" <<
-		_CpuEntry::entry_name[VENDOR_ID]   << ref.entries[VENDOR_ID]   << "\n" <<
-		_CpuEntry::entry_name[CPU_FAMILY]  << ref.entries[CPU_FAMILY]  << "\n" <<
-		_CpuEntry::entry_name[MODEL]       << ref.entries[MODEL]       << "\n" <<
-		_CpuEntry::entry_name[PHYSICAL_ID] << ref.entries[PHYSICAL_ID] << "\n" <<
-		_CpuEntry::entry_name[SIBILINGS]   << ref.entries[SIBILINGS]   << "\n" <<
-		_CpuEntry::entry_name[CORE_ID]     << ref.entries[CORE_ID]     << "\n" <<
-		_CpuEntry::entry_name[CPU_CORES]   << ref.entries[CPU_CORES]   << "\n" <<
-		_CpuEntry::entry_name[CPU_MHZ]     << ref.entries[CPU_MHZ]     << "\n" <<
-		_CpuEntry::entry_name[CACHE_SIZE]  << ref.entries[CACHE_SIZE]  << "\n" <<
-		_CpuEntry::entry_name[MODEL_NAME]  << ref.entries[MODEL_NAME]  << "\n" <<
-		_CpuEntry::entry_name[FLAGS]       << ref.entries[FLAGS]       << "\n";
-
-}
-
-
-std::vector<CpuEntry> get_cpu_info() {
-
-	std::vector<CpuEntry> vct;
-	std::vector<utils::Line::Line> cpu_n_entry_lines(12 * 4); /* cpu_N lines into /proc/cpuinfo */
-	utils::Line::ifstream_l proc_cpuinfo{"/proc/cpuinfo"};
-	proc_cpuinfo.default_exceptions();
-
-	for (const auto &l : proc_cpuinfo) {
-
-		cpu_n_entry_lines.emplace_back(l);
-
-		if (l.empty()) { /* end of cpu_N lines (\n) */
-			vct.push_back(_CpuEntry{cpu_n_entry_lines});
-			cpu_n_entry_lines.clear();
-		}
-	}
-
-	return vct;
-}
-
 
 /* Sliceable */
 struct _CpuEntry: CpuEntry {
 
 	const static std::regex line_reg[ARRAY_LENGTH];
-	const static char *_CpuEntry::entry_name[ARRAY_LENGTH];
+	const static char *entry_name[ARRAY_LENGTH];
 
 	explicit _CpuEntry(const std::vector<utils::Line::Line> &line) {
 
@@ -71,6 +33,46 @@ struct _CpuEntry: CpuEntry {
 	}
 
 };
+
+
+std::vector<CpuEntry> Self::get_cpu_info() {
+
+	std::vector<CpuEntry> vct;
+	std::vector<utils::Line::Line> cpu_n_entry_lines(12 * 4); /* cpu_N lines into /proc/cpuinfo */
+	utils::Line::ifstream_l proc_cpuinfo{"/proc/cpuinfo"};
+	proc_cpuinfo.default_exceptions();
+
+	for (const auto &l : proc_cpuinfo) {
+
+		cpu_n_entry_lines.emplace_back(l);
+
+		if (l.empty()) { /* end of cpu_N lines (\n) */
+			vct.push_back(_CpuEntry{cpu_n_entry_lines});
+			cpu_n_entry_lines.clear();
+		}
+	}
+
+	return vct;
+}
+
+
+std::ostream & Self::operator<<(std::ostream &os, const CpuEntry &ref) {
+
+	return os <<
+		_CpuEntry::entry_name[PROCESSOR]   << ref.entries[PROCESSOR]   << "\n" <<
+		_CpuEntry::entry_name[VENDOR_ID]   << ref.entries[VENDOR_ID]   << "\n" <<
+		_CpuEntry::entry_name[CPU_FAMILY]  << ref.entries[CPU_FAMILY]  << "\n" <<
+		_CpuEntry::entry_name[MODEL]       << ref.entries[MODEL]       << "\n" <<
+		_CpuEntry::entry_name[PHYSICAL_ID] << ref.entries[PHYSICAL_ID] << "\n" <<
+		_CpuEntry::entry_name[SIBILINGS]   << ref.entries[SIBILINGS]   << "\n" <<
+		_CpuEntry::entry_name[CORE_ID]     << ref.entries[CORE_ID]     << "\n" <<
+		_CpuEntry::entry_name[CPU_CORES]   << ref.entries[CPU_CORES]   << "\n" <<
+		_CpuEntry::entry_name[CPU_MHZ]     << ref.entries[CPU_MHZ]     << "\n" <<
+		_CpuEntry::entry_name[CACHE_SIZE]  << ref.entries[CACHE_SIZE]  << "\n" <<
+		_CpuEntry::entry_name[MODEL_NAME]  << ref.entries[MODEL_NAME]  << "\n" <<
+		_CpuEntry::entry_name[FLAGS]       << ref.entries[FLAGS]       << "\n";
+
+}
 
 const std::regex _CpuEntry::line_reg[ARRAY_LENGTH] {
 	[PROCESSOR]   = R"(^processor\s*:\s*(.*))"_ri,

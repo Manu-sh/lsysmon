@@ -8,7 +8,10 @@
 #include <utility>
 #include <numeric>
 
-using namespace Cpu::Details::Proc::Stat;
+namespace Self = Cpu::Details::Proc::Stat;
+using namespace Self;
+
+
 using regex_utils::operator""_ri;
 
 // indexs to access map_proc_stat result (see man 5 proc)
@@ -78,4 +81,8 @@ static inline std::vector<std::vector<uint32_t>> map_proc_stat() {
 	}
 
 	return mtx;
+}
+
+std::unique_ptr<Stat> Self::get_cpu_stat() {
+	return std::make_unique<_Stat>();
 }

@@ -14,6 +14,14 @@
 #include <iostream>
 using namespace std;
 
+/*
+#include "../proc/CpuInfo.hpp"
+*/
+
+
+#include "../proc/Stat.hpp"
+
+
 int main() {
 
 /*
@@ -37,5 +45,19 @@ int main() {
 	}
 */
 
+/*
+	{
+		const auto &x = Cpu::Details::Proc::CpuInfo::get_cpu_info();
+		cout << x[0] << endl;
+	}
+
+*/
+
+/*
+	{
+		const auto x = Cpu::Details::Proc::Stat::get_cpu_stat();
+		cout << x->pct_usage()[0] << endl;
+	}
+*/
 
 }

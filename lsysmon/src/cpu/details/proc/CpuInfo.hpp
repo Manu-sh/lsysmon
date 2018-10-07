@@ -26,8 +26,6 @@ namespace Cpu::Details::Proc::CpuInfo {
 
 	struct CpuEntry {
 		std::vector<std::string> entries;
-		private: 
-			CpuEntry() = default;
 	};
 
 	std::ostream & operator<<(std::ostream &os, const CpuEntry &ref);

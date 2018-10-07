@@ -12,16 +12,10 @@ namespace Cpu::Details::Sysfs::CpuN::Cache {
 	all except ARRAY_LENGTH which is used internally by Cache.cpp */
 
 	struct Cache {
-
-		friend std::vector<Cache> get_cache(uint8_t cpu_n);
-
 		uint32_t size; 		    /* size in kB 						        */
 		uint8_t id;                 /* an unique number for a specific instance of a cache              */
 		uint8_t level: 4;           /* cache hierarchy in the multi-level cache configuration           */
 		uint8_t type:  4;           /* Instruction, Data, Unified (holds both data and instructions)    */
-
-		private:
-			Cache() = default;
 	};
 
 	/* operator==() use the id field & type to understand 
@@ -30,6 +24,5 @@ namespace Cpu::Details::Sysfs::CpuN::Cache {
 	bool operator==(const Cache &a, const Cache &b);
 	bool operator!=(const Cache &a, const Cache &b);
 	std::ostream & operator<<(std::ostream &os, const Cache &f);
-
 	std::vector<Cache> get_cache(uint8_t cpu_n);
 }
