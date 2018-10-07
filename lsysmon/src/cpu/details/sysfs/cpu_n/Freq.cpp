@@ -1,7 +1,7 @@
 #include "common/Common.hpp"
 #include "Freq.hpp"
 
-#include "../../../../utils/utils.hpp"
+#include "../../../../utils/utils_line.hpp"
 
 namespace Self = Cpu::Details::Sysfs::CpuN::Freq;
 using namespace Self;
@@ -13,9 +13,9 @@ std::ostream & Self::operator<<(std::ostream &os, const Freq &f) {
 		"scaling_cur_freq (KHz): " << f.scaling_cur_freq;
 }
 
-Freq Self::get_freq(uint8_t cpu_n) {
+/* used only here for now */
+static inline void get_freq(Freq &freq, uint8_t cpu_n) {
 
-	Freq freq;
 	enum: uint8_t { CPUINFO_CUR_FREQ, SCALING_CUR_FREQ, CPUINFO_MIN_FREQ, CPUINFO_MAX_FREQ, ARRAY_LENGTH /*  N + 1 */ };
 	const static std::string fname[ARRAY_LENGTH] { "cpuinfo_cur_freq", "scaling_cur_freq", "cpuinfo_min_freq", "cpuinfo_max_freq" };
 
@@ -38,7 +38,7 @@ Freq Self::get_freq(uint8_t cpu_n) {
 
 	for (uint_fast8_t i = CPUINFO_MIN_FREQ; i < ARRAY_LENGTH; i++) {
 
-		const auto &p = fname[i];
+		const auto &p = fname[(int)i];
 		ifs.open(scan_path + p);
 
 		utils::Line::Line line; ifs >> line;
@@ -56,5 +56,8 @@ Freq Self::get_freq(uint8_t cpu_n) {
 		ifs.close();
 	}
 
-	return freq;
+}
+
+Freq::Freq(uint8_t cpu_n) {
+	get_freq(*this, cpu_n);
 }

@@ -1,146 +1,8 @@
 #pragma once
 
-#include <iostream>
-#include <cassert>
-#include <cstring>
+#include <cstdio>
 #include <string>
-#include <fstream>
-#include <iterator>
-#include <algorithm>
-#include <functional>
-
-using std::cout, std::endl;
-
-extern "C" {
-	#include <glob.h>
-	#include <unistd.h>
-}
-
-#include <vector>
 #include <stdexcept>
-#include <string>
-#include <sstream>
-
-namespace utils::Linux {
-
-	// https://stackoverflow.com/questions/8401777/simple-glob-in-c-on-unix-system
-	//  MT-Unsafe !!!
-
-	static std::vector<std::string> glob(const std::string &pattern) {
-
-		// glob struct resides on the stack
-		glob_t glob_result;
-		memset(&glob_result, 0, sizeof(glob_result));
-
-		// do the glob operation
-		if (auto err = glob(pattern.c_str(), GLOB_TILDE, NULL, &glob_result)) {
-			globfree(&glob_result);
-			throw std::runtime_error("glob() failed with return_value " + err);
-		}
-
-		std::vector<std::string> filenames;
-		for(decltype(glob_result.gl_pathc) i = 0; i < glob_result.gl_pathc; ++i)
-			filenames.emplace_back(glob_result.gl_pathv[i]);
-
-		// cleanup
-		globfree(&glob_result);
-		return filenames;
-	}
-
-	struct Fd {
-
-		Fd() = default;
-		Fd(const Fd &) 		   = delete;
-		Fd & operator=(const Fd &) = delete;
-
-		Fd(int fd) { if (fd < 0) throw std::system_error(errno, std::generic_category()); this->fd = fd; }
-		~Fd() { close(fd); }
-		int fd = -1;
-	};
-
-}
-
-namespace utils::String {
-
-
-	// return the pattern itself ( v.size() == 1 ) if there is nothing to split es. "hello" -> "hello", "  hello " -> "hello"
-	static std::vector<std::string> split(const std::string_view &s, const std::string_view &set) noexcept {
-
-		std::vector<std::string> vct(0);
-		std::string_view::iterator it[2] {s.begin(), s.end()};
-
-		const static auto &e_contained     = [&set](const char e) { return set.find(e) == std::string_view::npos; };
-		const static auto &e_not_contained = [&set](const char e) { return set.find(e) != std::string_view::npos; };
-
-		while (1) {
-
-			if ((it[0] = std::find_if(it[0], s.end(), e_contained)) == s.end())
-				return vct;
-
-			if ((it[1] = std::find_if(it[0], s.end(), e_not_contained)) == s.end()) {
-				vct.emplace_back(it[0], s.end());
-				return vct;
-			}
-
-			vct.emplace_back(it[0], it[1]);
-			it[0] = it[1];
-		}
-
-		return vct;
-	}
-
-}
-
-namespace utils::Line {
-
-	struct Line: std::string {};
-	const auto &npos = std::string::npos;
-
-	// getline from istream
-
-
-	/* Reaching the End-of-File sets the eofbit. But note that operations that reach 
-	   the End-of-File may also set the failbit if this makes them fail
-	   (thus setting both eofbit and failbit). */
-
-	static std::istream & operator>>(std::istream &is, Line &l) {
-
-		try {
-			std::getline(is, l);
-		} catch (std::ifstream::failure &e) {
-			if (!is.eof()) throw;
-		}
-
-		return is;
-	}
-
-	// is can't be const they aren't const iterator
-	static std::istream_iterator<Line> begin(std::istream &is) {
-		return std::istream_iterator<Line>(is);
-	}
-
-	static const std::istream_iterator<Line> end([[maybe_unused]] const std::istream &dummy) {
-		const static auto end = std::istream_iterator<Line>();
-		return end;
-	}
-
-	class ifstream_l: public std::ifstream {
-
-		public:
-			using std::ifstream::ifstream;
-			ifstream_l(const ifstream_l &) = delete;
-			ifstream_l & operator=(const ifstream_l &) = delete;
-
-			void default_exceptions() { this->exceptions(std::ifstream::failbit|std::ifstream::badbit); }
-			auto begin()     { return utils::Line::begin(*this); }
-			const auto end() { return utils::Line::end(*this);   }
-			
-			void each_line(std::function<void(const Line &)> f) {
-				std::for_each(this->begin(), this->end(), f); 
-			}
-	};
-
-}
 
 namespace units {
 
@@ -152,10 +14,10 @@ namespace units {
 		to_string(d, 3) -> "0.123"
 	*/
 
-
 	static std::string to_string(double d, int precision) {
 
 		using std::string_literals::operator""s;
+
 		switch (precision) {
 			case 0: return std::to_string((int)d);
 			default:
@@ -214,7 +76,6 @@ namespace units {
 		template<typename T>
 		constexpr T kilohertz = 1000;
 	}
-
 
 	namespace kHz {
 

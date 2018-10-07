@@ -18,11 +18,15 @@ namespace Cpu::Details::Sysfs::CpuN::Cache {
 		uint8_t type:  4;           /* Instruction, Data, Unified (holds both data and instructions)    */
 	};
 
+
+#if 0
 	/* operator==() use the id field & type to understand 
 	when two caches are two physically different caches */
 
 	bool operator==(const Cache &a, const Cache &b);
 	bool operator!=(const Cache &a, const Cache &b);
+#endif
+
 	std::ostream & operator<<(std::ostream &os, const Cache &f);
 	std::vector<Cache> get_cache(uint8_t cpu_n);
 }

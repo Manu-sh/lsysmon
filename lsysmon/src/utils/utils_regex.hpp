@@ -3,7 +3,7 @@
 #include <regex>
 
 // including regex slow down compilation
-namespace regex_utils {
+namespace utils::Regex {
 
 	// literal constructor for regex
 	static std::regex operator""_r(const char *regex, [[maybe_unused]] size_t dummy) {

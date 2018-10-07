@@ -1,14 +1,14 @@
 #include "CpuInfo.hpp"
 
-#include "../../../utils/regex_utils.hpp"
-#include "../../../utils/utils.hpp"
+#include "../../../utils/utils_regex.hpp"
+#include "../../../utils/utils_line.hpp"
 
 namespace Self = Cpu::Details::Proc::CpuInfo;
 using namespace Self;
 
-using regex_utils::operator""_ri;
+using utils::Regex::operator""_ri;
 
-/* Sliceable */
+/* We want slicing */
 struct _CpuEntry: CpuEntry {
 
 	const static std::regex line_reg[ARRAY_LENGTH];
@@ -47,7 +47,7 @@ std::vector<CpuEntry> Self::get_cpu_info() {
 		cpu_n_entry_lines.emplace_back(l);
 
 		if (l.empty()) { /* end of cpu_N lines (\n) */
-			vct.push_back(_CpuEntry{cpu_n_entry_lines});
+			vct.push_back( _CpuEntry{cpu_n_entry_lines} ); /* Slicing */
 			cpu_n_entry_lines.clear();
 		}
 	}
@@ -74,6 +74,7 @@ std::ostream & Self::operator<<(std::ostream &os, const CpuEntry &ref) {
 
 }
 
+
 const std::regex _CpuEntry::line_reg[ARRAY_LENGTH] {
 	[PROCESSOR]   = R"(^processor\s*:\s*(.*))"_ri,
 	[VENDOR_ID]   = R"(^vendor_id\s*:\s*(.*))"_ri,
@@ -88,6 +89,7 @@ const std::regex _CpuEntry::line_reg[ARRAY_LENGTH] {
 	[MODEL_NAME]  = R"(^model\s+name\s*:\s*(.*))"_ri,
 	[FLAGS]       = R"(^flags\s*:\s*(.*))"_ri
 };
+
 
 const char *_CpuEntry::entry_name[ARRAY_LENGTH] {
 	[PROCESSOR]   = "PROCESSOR   ",

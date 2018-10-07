@@ -1,8 +1,11 @@
 #include "common/Common.hpp"
 #include "Cache.hpp"
 
-#include "../../../../utils/utils.hpp"
+#include "../../../../utils/utils_linux.hpp"
+#include "../../../../utils/utils_line.hpp"
 #include "../../../../utils/exceptions.hpp"
+
+#include <string_view>
 
 namespace Self = Cpu::Details::Sysfs::CpuN::Cache;
 using namespace Self; /* this namespace */
@@ -24,7 +27,7 @@ static inline Cache _todo(Cache &cache, uint8_t cpu_n, uint8_t index_n) {
 
 	for (uint_fast8_t i = UINT8_C(0); i < ARRAY_LENGTH; i++) {
 
-		const auto &p = fname[i];
+		const auto &p = fname[(int)i];
 
 		ifs.open(scan_path + p);		
 		utils::Line::Line line; ifs >> line;
@@ -58,15 +61,16 @@ static inline Cache _todo(Cache &cache, uint8_t cpu_n, uint8_t index_n) {
 	return cache;
 }
 
-
+#if 0
 bool Self::operator==(const Cache &a, const Cache &b) { return a.id == b.id && a.level == b.level; }
 bool Self::operator!=(const Cache &a, const Cache &b) { return ! (a == b); }
+#endif
 
 std::ostream & Self::operator<<(std::ostream &os, const Cache &c) {
 	return os <<
 		"level:              " << (short)c.level     << "\n" <<
 		"type:               " << type_name[c.type]  << "\n" <<
-		"size (kB):          " << c.size;
+		"size (kB):          " << c.size << "\n";
 }
 
 std::vector<Cache> Self::get_cache(uint8_t cpu_n) {

@@ -1,7 +1,7 @@
 #include "Stat.hpp"
 
-#include "../../../utils/regex_utils.hpp"
-#include "../../../utils/utils.hpp"
+#include "../../../utils/utils_regex.hpp"
+#include "../../../utils/utils_line.hpp"
 
 #include <cstdint>
 #include <cassert>
@@ -12,7 +12,7 @@ namespace Self = Cpu::Details::Proc::Stat;
 using namespace Self;
 
 
-using regex_utils::operator""_ri;
+using utils::Regex::operator""_ri;
 
 // indexs to access map_proc_stat result (see man 5 proc)
 enum: uint8_t { USER, NICE, SYSTEM, IDLE, IO_WAIT, IRQ, SOFT_IRQ };
