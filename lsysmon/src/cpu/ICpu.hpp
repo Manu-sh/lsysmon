@@ -4,6 +4,7 @@
 #include <utility>
 #include <cstdint>
 #include <vector>
+#include <ostream>
 
 #include "details/sysfs/cpu_n/Cache.hpp"
 #include "details/proc/Stat.hpp"
@@ -42,8 +43,8 @@ namespace Cpu {
 
 			uint32_t cpu_min_freq{}; /* kHz */
 			uint32_t cpu_max_freq{}; /* kHz */
-			uint8_t  cpu_core{};     /* physical core per cpu */
-			uint8_t  cpu_thread{};   /* thread per core */
+			uint8_t  cpu_core{};     /* core per cpu */
+			uint8_t  cpu_thread{};   /* thread per cpu */
 	};
 
 	std::ostream & operator<<(std::ostream &os, const ICpu &c);
