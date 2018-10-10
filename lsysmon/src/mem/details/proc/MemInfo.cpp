@@ -41,8 +41,8 @@ struct _MemInfo: MemInfo {
 };
 
 
-inline MemInfo Self::get_meminfo() { return MemInfo(); }
-inline void Self::get_meminfo(MemInfo &mem) {
+__attribute__((always_inline)) inline MemInfo Self::get_meminfo() { return MemInfo(); }
+__attribute__((always_inline)) inline void Self::get_meminfo(MemInfo &mem) {
 
 	utils::Line::ifstream_l proc_meminfo{"/proc/meminfo"};
 	proc_meminfo.default_exceptions();

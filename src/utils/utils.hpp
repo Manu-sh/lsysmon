@@ -221,7 +221,7 @@ namespace units {
 	namespace kHz {
 
 		template <typename T>
-		static inline constexpr auto to_Hz(T khz) { 
+		static __attribute__((always_inline)) inline constexpr auto to_Hz(T khz) { 
 			return khz * 1000; 
 		}
 
@@ -230,7 +230,7 @@ namespace units {
 	namespace kB {
 
 		template <typename T>
-		static inline constexpr auto to_B(T kB) { 
+		static __attribute__((always_inline)) inline constexpr auto to_B(T kB) { 
 			return kB * 1000; 
 		}
 
@@ -239,7 +239,7 @@ namespace units {
 	namespace KiB {
 
 		template <typename T>
-		static inline constexpr auto to_B(T KiB) { 
+		static __attribute__((always_inline)) inline constexpr auto to_B(T KiB) { 
 			return KiB * 1024; 
 		}
 

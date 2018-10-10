@@ -11,7 +11,7 @@ std::ostream & Self::operator<<(std::ostream &os, const Topology &t) {
 }
 
 /* used only here for now */
-static inline void get_topology(Topology &top, uint8_t cpu_n) {
+static __attribute__((always_inline)) inline void get_topology(Topology &top, uint8_t cpu_n) {
 
 	enum: uint8_t { PHYSICAL_PACKAGE_ID, ARRAY_LENGTH /*  N + 1 */ };
 	const static std::string fname[] { "physical_package_id" };

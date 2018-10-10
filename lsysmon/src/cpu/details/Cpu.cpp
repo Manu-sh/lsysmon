@@ -64,7 +64,7 @@ std::ostream & Self::operator<<(std::ostream &os, const ICpu &c) {
 
 class SingleSocketCpu: public ICpu {
 
-	static inline std::vector<CoreStat> single_cpu_get_core_stats(const std::vector<float> &v);
+	static __attribute__((always_inline)) inline std::vector<CoreStat> single_cpu_get_core_stats(const std::vector<float> &v);
 
 	public:
 		friend ICpu * Self::get_single_sk_cpu(const std::unique_ptr<Stat> &cstat);
@@ -141,7 +141,7 @@ ICpu * Self::get_single_sk_cpu(const std::unique_ptr<ICpu::Stat> &cstat) {
 }
 
 
-inline std::vector<ICpu::CoreStat> SingleSocketCpu::single_cpu_get_core_stats(const std::vector<float> &v) {
+__attribute__((always_inline)) inline std::vector<ICpu::CoreStat> SingleSocketCpu::single_cpu_get_core_stats(const std::vector<float> &v) {
 
 	std::vector<CoreStat> vct;
 

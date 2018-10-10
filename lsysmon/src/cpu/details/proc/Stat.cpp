@@ -16,7 +16,7 @@ using utils::Regex::operator""_ri;
 
 // indexs to access map_proc_stat result (see man 5 proc)
 enum: uint8_t { USER, NICE, SYSTEM, IDLE, IO_WAIT, IRQ, SOFT_IRQ };
-static inline std::vector<std::vector<uint32_t>> map_proc_stat();
+static __attribute__((always_inline)) inline std::vector<std::vector<uint32_t>> map_proc_stat();
 
 class _Stat: public Stat {
 
@@ -57,7 +57,7 @@ std::vector<float> _Stat::pct_usage() const {
 
 }
 
-static inline std::vector<std::vector<uint32_t>> map_proc_stat() {
+static __attribute__((always_inline)) inline std::vector<std::vector<uint32_t>> map_proc_stat() {
 
 	const static auto &rows = "^cpu[0-9]{0,250}\\s.*"_ri;
 	const static auto &cols = "\\s([0-9]+)"_ri;

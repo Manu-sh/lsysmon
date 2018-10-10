@@ -14,7 +14,7 @@ std::ostream & Self::operator<<(std::ostream &os, const Freq &f) {
 }
 
 /* used only here for now */
-static inline void get_freq(Freq &freq, uint8_t cpu_n) {
+static __attribute__((always_inline)) inline void get_freq(Freq &freq, uint8_t cpu_n) {
 
 	enum: uint8_t { CPUINFO_CUR_FREQ, SCALING_CUR_FREQ, CPUINFO_MIN_FREQ, CPUINFO_MAX_FREQ, ARRAY_LENGTH /*  N + 1 */ };
 	const static std::string fname[ARRAY_LENGTH] { "cpuinfo_cur_freq", "scaling_cur_freq", "cpuinfo_min_freq", "cpuinfo_max_freq" };

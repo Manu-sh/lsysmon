@@ -16,7 +16,7 @@ const std::string_view type_name[ARRAY_LENGTH] {
 	"Unified"
 };
 
-static inline Cache _todo(Cache &cache, uint8_t cpu_n, uint8_t index_n) {
+static __attribute__((always_inline)) inline Cache _todo(Cache &cache, uint8_t cpu_n, uint8_t index_n) {
 
 	enum: uint8_t { LEVEL, TYPE, SIZE, ARRAY_LENGTH /*  N + 1 */ };
 	const static std::string fname[ARRAY_LENGTH] { "level", "type", "size" };

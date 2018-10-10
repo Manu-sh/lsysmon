@@ -36,7 +36,7 @@ namespace Cpu::Details::Proc {
 			SOFT_IRQ
 		};
 
-		static inline std::vector<std::vector<uint32_t>> map_proc_stat() {
+		static __attribute__((always_inline)) inline std::vector<std::vector<uint32_t>> map_proc_stat() {
 
 			const static auto &rows = "^cpu[0-9]{0,250}\\s.*"_ri;
 			const static auto &cols = "\\s([0-9]+)"_ri;
