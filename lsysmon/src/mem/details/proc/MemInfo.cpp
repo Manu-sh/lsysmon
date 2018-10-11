@@ -11,6 +11,13 @@ using namespace Self;
 
 using utils::Regex::operator""_ri;
 
+struct _MemInfo: MemInfo {
+	const static std::regex line_reg[ARRAY_LENGTH];
+	const static char *entry_name[ARRAY_LENGTH];
+	_MemInfo() { get_meminfo(*this); }
+
+};
+
 std::ostream & Self::operator<<(std::ostream &os, const MemInfo &ref) {
 
 	const static auto &to_human = [](uint64_t kB) { 
@@ -32,17 +39,8 @@ std::ostream & Self::operator<<(std::ostream &os, const MemInfo &ref) {
 
 }
 
-
-struct _MemInfo: MemInfo {
-	const static std::regex line_reg[ARRAY_LENGTH];
-	const static char *entry_name[ARRAY_LENGTH];
-	_MemInfo() { get_meminfo(*this); }
-
-};
-
-
-__attribute__((always_inline)) inline MemInfo Self::get_meminfo() { return MemInfo(); }
-__attribute__((always_inline)) inline void Self::get_meminfo(MemInfo &mem) {
+MemInfo Self::get_meminfo() { return _MemInfo(); }
+void Self::get_meminfo(MemInfo &mem) {
 
 	utils::Line::ifstream_l proc_meminfo{"/proc/meminfo"};
 	proc_meminfo.default_exceptions();
