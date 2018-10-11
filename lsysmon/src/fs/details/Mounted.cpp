@@ -4,6 +4,7 @@
 
 #include "Mounted.hpp"
 #include "../../utils/utils_linux.hpp"
+#include "../../utils/units.hpp"
 
 #include <cassert>
 #include <thread>
@@ -23,15 +24,16 @@ extern "C" {
 namespace Self = Fs::Details::Mounted;
 using namespace Self;
 
-std::ostream & Self::operator<<(std::ostream &os, const Mounted &m) {
-	return os << "type: \"" << m.type << "\"\ndir: \"" << m.dir << "\"\nfsname: \"" << m.fsname << "\"";
-}
-
 /* define a subclass for mounted inner class */
 struct _SpaceInfo: Mounted::SpaceInfo {
 
 	 explicit _SpaceInfo(const std::filesystem::space_info &s)
 	   : SpaceInfo{s.capacity, s.available} { }
+
+
+	std::string get_capacity()  const { return units::byte::to_iec(capacity); }
+	std::string get_used()      const { return units::byte::to_iec(capacity - available); }
+	std::string get_available() const { return units::byte::to_iec(available); }
 };
 
 
@@ -43,10 +45,22 @@ struct _Mounted: Mounted {
 		this->type   = mnt->mnt_type;
 		this->fsname = mnt->mnt_fsname;
 	}
-
-	SpaceInfo space() const { return _SpaceInfo(std::filesystem::space(this->dir)); }
 };
 
+/* definition of base class method */
+Mounted::SpaceInfo Mounted::space() const { return _SpaceInfo(std::filesystem::space(this->dir)); }
+
+std::ostream & Self::operator<<(std::ostream &os, const Mounted &m) {
+	return os << "type: \"" << m.type << "\"\ndir: \"" << m.dir << "\"\nfsname: \"" << m.fsname << "\"";
+}
+
+std::ostream & Self::operator<<(std::ostream &os, const Mounted::SpaceInfo &s) {
+	return os << "capacity: \"" << s.capacity << "\navailable: \"" << s.available << "\"\nused: \"" << (s.capacity - s.available) << "\"";
+}
+
+static __attribute__((always_inline)) inline std::ostream & operator<<(std::ostream &os, const _SpaceInfo &s) {
+	return os << "capacity: \"" << s.get_capacity() << "\"\nused: \"" << s.get_used() << "\"\navailable: \"" << s.get_available() << "\"";
+}
 
 void Self::on_mounted_fs(std::function<void(std::vector<Mounted> &)> callback) {
 

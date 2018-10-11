@@ -17,6 +17,8 @@ namespace Fs::Details::Mounted {
 		std::string fsname;
 	};
 
+	std::ostream & operator<<(std::ostream &os, const Mounted::SpaceInfo &s);
 	std::ostream & operator<<(std::ostream &os, const Mounted &m);
+
 	void on_mounted_fs(std::function<void(std::vector<Mounted> &)> callback);
 }

@@ -1,6 +1,4 @@
-
 #include "details/Mounted.hpp"
-
 #include <iostream>
 
 extern "C" {
@@ -16,8 +14,8 @@ int main() {
 	cout << "checking in progress..." << endl;
 
 	on_mounted_fs([] (const auto &vct){
-		for (const auto &e : vct)
-			cout << e << endl;
+		for (const auto &e : vct) 
+			cout << e << "\n\n" << e.space() << endl;
 	});
 
 	while (1); /* waiting for events */
