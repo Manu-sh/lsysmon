@@ -15,6 +15,7 @@ using namespace Cpu::Details;
 #include "ICpu.hpp"
 
 #include <iostream>
+
 extern "C" {
 	#include <unistd.h>
 }
