@@ -1,18 +1,13 @@
 #pragma once
 
 #include <ctime>
+#include <string>
 
 extern "C" {
 	#include <sys/utsname.h>
 }
 
-#include "utils/utils.hpp"
-#include "cpu/Cpu.hpp"
-#include "fs/Fs.hpp"
-#include "mem/Mem.hpp"
-
-#include <iostream>
-using std::endl, std::cout;
+#include "utils/utils_line.hpp"
 
 namespace Linux {
 
