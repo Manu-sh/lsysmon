@@ -1,8 +1,10 @@
 #include "utils_string.hpp"
+#include "utils_line.hpp"
 
 #include <algorithm>
+#include <sstream>
 
-std::vector<std::string> split(const std::string_view &s, const std::string_view &set) noexcept {
+std::vector<std::string> utils::String::split(const std::string_view &s, const std::string_view &set) {
 
 	std::vector<std::string> vct(0);
 	std::string_view::iterator it[2] {s.begin(), s.end()};
@@ -25,4 +27,24 @@ std::vector<std::string> split(const std::string_view &s, const std::string_view
 	}
 
 	return vct;
+}
+
+
+std::string utils::String::map_file(const std::string &path) {
+
+	using namespace utils::Line;
+
+	std::stringstream ss;
+	ifstream_l ifs;
+
+	ifs.default_exceptions();
+	ifs.open(path);
+
+	std::copy(
+		ifs.begin(), 
+		ifs.end(),
+		std::ostream_iterator<std::string>(ss, "\n") // don't use on windows obv
+	);
+
+	return ss.str();
 }

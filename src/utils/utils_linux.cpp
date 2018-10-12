@@ -1,4 +1,5 @@
 #include "utils_linux.hpp"
+#include "utils_string.hpp"
 
 #include <cstring>
 #include <stdexcept>

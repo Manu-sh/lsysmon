@@ -43,9 +43,9 @@ namespace utils::Line {
 
 			void each_line(std::function<void(const Line &)> f);
 			void default_exceptions();
+
 			std::istream_iterator<Line> begin();
 			const std::istream_iterator<Line> end();
-
 	};
 
 }

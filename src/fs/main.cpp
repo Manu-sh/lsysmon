@@ -11,6 +11,11 @@ using namespace Fs::Details::Mounted;
 using namespace std;
 using namespace std::chrono_literals;
 
+/*
+	grep -n . /sys/block/sd[a-z]/uevent
+	grep -n . /sys/block/sd[a-z]/device/model
+*/
+
 int main() {
 
 	cout << "checking in progress..." << endl;

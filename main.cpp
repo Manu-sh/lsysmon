@@ -1,4 +1,5 @@
 #include "src/Linux.hpp"
+#include "src/utils/utils_string.hpp"
 
 #include <iostream>
 #include <stdexcept>
@@ -25,6 +26,9 @@ static void progress(uint_fast32_t width, uint_fast32_t pct_progress, std::ostre
 }
 
 int main() try {
+
+	// cout << utils::String::map_file( std::string("/home/user/.bashrc") )<< endl;
+
 
 #if 0
 	Cpu::Details::Proc::CpuStat cpu_stat;

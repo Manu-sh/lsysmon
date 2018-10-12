@@ -104,7 +104,7 @@ ICpu * Self::get_single_sk_cpu(const std::unique_ptr<ICpu::Stat> &cstat) {
 	static atomic_bool once_flag;
 	static SingleSocketCpu cpu;
 
-	const std::vector<float> &pct = cstat ? cstat->pct_usage() : std::vector<float>(1);
+	const std::vector<float> &pct = cstat ? cstat->pct_usage() : std::vector<float>(1); /* an array of length 1 will be simply ignored by single_cpu_get_core_stats() */
 	cpu.tot_pct_usage = pct[0];
 	cpu.core_stat = SingleSocketCpu::single_cpu_get_core_stats(pct);
 

@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <string>
-#include <unordered_map>
 
 namespace utils::Linux {
 
@@ -19,23 +18,5 @@ namespace utils::Linux {
 		Fd & operator=(const Fd &) = delete;
 		int fd = -1;
 	};
-
-
-#if 0
-	struct SysfsEntry {
-		std::string path;
-		std::string key;
-		std::string value;
-	};
-
-	/* TODO
-		/sys/block/sd[a-z]/device/model
-		model:
-			...
-	*/
-
-	std::unordered_map<std::string, std::string> map_sysfs(const std::string_view &path_glob);
-
-#endif
 
 }

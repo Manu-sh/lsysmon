@@ -22,5 +22,6 @@ namespace Fs::Details::Mounted {
 	std::ostream & operator<<(std::ostream &os, const Mounted::SpaceInfo &s);
 	std::ostream & operator<<(std::ostream &os, const Mounted &m);
 
+	/* scsi only */
 	void on_mounted_fs(std::function<void(std::vector<Mounted> &)> callback);
 }
