@@ -2,5 +2,4 @@ CXXFLAGS=-O3 -pipe -ffast-math -Wall -Wextra -D_REENTRANT -std=c++17 -Wno-unused
 LDLIBS=-lpthread -lstdc++fs
 
 all:
-	# make -C ../utils
-	$(CXX) $(CXXFLAGS) -o main main.cpp details/Mounted.cpp lutils.a $(LDLIBS)
+	$(CXX) $(CXXFLAGS) -o main main.cpp details/Mounted.cpp ../utils/lutils.a $(LDLIBS)
