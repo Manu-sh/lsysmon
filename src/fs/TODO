@@ -1,0 +1,16 @@
+[FS]
+	model: Seagate..     (sysfs)
+	fs: ext4...          (/proc/self/mountinfo)
+	device-name: /dev/..
+	mount_point          (/proc/self/mountinfo)
+	capacity	     (stat)
+	used
+	major                (/proc/self/mountinfo|stat)
+	minor
+
+	blk-sz [?]
+
+
+BUG: missing sd cards
+
+	major-number: 179

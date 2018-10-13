@@ -1,0 +1,39 @@
+[CPU]
+
+	[MONITOR]
+	cpu usage  [OK]
+	core usage [OK]
+	cpu freq   [OK]
+
+	cpu model name    [OK]
+	cpu min frequency [OK]
+	cpu max frequency [OK]
+	cpu cache size    [OK]
+
+	cpu architecture  [OK]
+	cpu endianess     (?)
+	cpu VT-X          [OK]
+
+	cpu temperature   (?)
+
+
+BUG armv7:
+
+	pi@raspberrypi[15:31:31]~/lsysmon/src/cpu ⚡}➤./main 
+	terminate called after throwing an instance of 'std::runtime_error'
+	what():  missing cpu entry VENDOR_ID   
+	Annullato
+
+	processor	: 3
+	model name	: ARMv7 Processor rev 4 (v7l)
+	BogoMIPS	: 38.40
+	Features	: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm crc32 
+	CPU implementer	: 0x41
+	CPU architecture: 7
+	CPU variant	: 0x0
+	CPU part	: 0xd03
+	CPU revision	: 4
+
+	Hardware	: BCM2835
+	Revision	: a02082
+	Serial		: 00000000e20de557
