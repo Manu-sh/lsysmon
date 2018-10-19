@@ -14,3 +14,9 @@
 BUG: missing sd cards
 
 	major-number: 179
+
+using libudev:
+
+	http://presbrey.scripts.mit.edu/doc/libudev/index.html
+	http://www.signal11.us/oss/udev
+	https://gist.github.com/Manu-sh/e6d7bf1f5cb675d123034ebc77784549

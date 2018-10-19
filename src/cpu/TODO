@@ -17,6 +17,12 @@
 	cpu temperature   (?)
 
 
+using libudev:
+	http://presbrey.scripts.mit.edu/doc/libudev/index.html
+	http://www.signal11.us/oss/udev/
+
+
+
 BUG armv7 CpuInfo.cpp is x86 only:
 
 	pi@raspberrypi[15:31:31]~/lsysmon/src/cpu ⚡}➤./main 
