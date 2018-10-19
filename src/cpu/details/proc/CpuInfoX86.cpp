@@ -8,6 +8,8 @@ using namespace Self;
 
 using utils::Regex::operator""_ri;
 
+/* x86 only */
+
 /* We want slicing */
 struct _CpuEntry: CpuEntry {
 

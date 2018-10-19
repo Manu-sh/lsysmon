@@ -2,7 +2,7 @@ CXXFLAGS=-O3 -pipe -ffast-math -Wall -Wextra -D_REENTRANT -std=c++17 -Wno-unused
 .PHONY: all clean
 
 all:
-	$(CXX) $(CXXFLAGS) -c details/Cpu.cpp details/proc/Stat.cpp details/proc/CpuInfo.cpp details/sysfs/cpu_n/Cache.cpp details/sysfs/cpu_n/Topology.cpp details/sysfs/cpu_n/Freq.cpp details/sysfs/cpu_n/Cache.cpp
+	$(CXX) $(CXXFLAGS) -c details/Cpu.cpp details/proc/Stat.cpp details/proc/CpuInfoX86.cpp details/sysfs/cpu_n/Cache.cpp details/sysfs/cpu_n/Topology.cpp details/sysfs/cpu_n/Freq.cpp details/sysfs/cpu_n/Cache.cpp
 	$(AR) -rv lcpu.a *.o
 
 	rm *.o
