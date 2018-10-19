@@ -17,7 +17,7 @@
 	cpu temperature   (?)
 
 
-BUG armv7:
+BUG armv7 CpuInfo.cpp is x86 only:
 
 	pi@raspberrypi[15:31:31]~/lsysmon/src/cpu ⚡}➤./main 
 	terminate called after throwing an instance of 'std::runtime_error'

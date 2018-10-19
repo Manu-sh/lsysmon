@@ -73,6 +73,7 @@ const char *_MemInfo::entry_name[ARRAY_LENGTH] {
 	[SHMEM]        = "SHMEM        "
 };
 
+/* regexs like R"(^memtotal\s*:\s*(\d+)\s*kb)"_ri making all slower */
 const std::regex _MemInfo::line_reg[ARRAY_LENGTH] {
 	[MEMTOTAL]     = R"(^memtotal\s*:\s*(.*)kb)"_ri,
 	[MEMFREE]      = R"(^memfree\s*:\s*(.*)kb)"_ri,

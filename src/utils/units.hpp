@@ -47,34 +47,34 @@ namespace units {
 
 
 		template <typename T>
-		constexpr T petabyte = 1000000000000000;
+		constexpr T petabyte = 1e15;
 
 		template <typename T>
-		constexpr T terabyte = 1000000000000;
+		constexpr T terabyte = 1e12;
 
 		template <typename T>
-		constexpr T gigabyte = 1000000000;
+		constexpr T gigabyte = 1e9;
 
 		template <typename T>
-		constexpr T megabyte = 1000000;
+		constexpr T megabyte = 1e6;
 
 		template <typename T>
-		constexpr T kilobyte = 1000;
+		constexpr T kilobyte = 1e3;
 	}
 
 	namespace Hz::magnitude_order {
 
 		template<typename T>
-		constexpr T terahertz = 1000000000000;
+		constexpr T terahertz = 1e12;
 
 		template<typename T>
-		constexpr T gigahertz = 1000000000;
+		constexpr T gigahertz = 1e9;
 
 		template<typename T>
-		constexpr T megahertz = 1000000;
+		constexpr T megahertz = 1e6;
 
 		template<typename T>
-		constexpr T kilohertz = 1000;
+		constexpr T kilohertz = 1e3;
 	}
 
 	namespace kHz {
