@@ -14,15 +14,23 @@ std::vector<std::string> utils::String::split(const std::string_view &s, const s
 
 	while (1) {
 
+		/* if there isn't no occurrence of the delimiters listed into set return
+		otherwise it[0] point to the first delimiter occurrence */
 		if ((it[0] = std::find_if(it[0], s.end(), e_contained)) == s.end())
 			return vct;
 
+		/* from the first delimiter occurrence it[0] stop at the next delimiter occurrence
+	        and assign it to it[1] */
 		if ((it[1] = std::find_if(it[0], s.end(), e_not_contained)) == s.end()) {
 			vct.emplace_back(it[0], s.end());
 			return vct;
 		}
 
+		/* create a string from two iterators it[0] to it[1] (the end) since are
+		iterators the interval is (start, end] and the delimiter is cutted off	*/
 		vct.emplace_back(it[0], it[1]);
+
+		/* move the iterator */
 		it[0] = it[1];
 	}
 
