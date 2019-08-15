@@ -23,7 +23,7 @@ namespace Cpu {
 			/* if get_single_sk_cpu is called with nullptr dosn't return info about cpu and core usages 
 			so and total_pct_usage() and core_stats() dons't provide any info about cpu usage */
 		
-			friend ICpu * get_single_sk_cpu(const std::unique_ptr<Stat> &cstat = nullptr);
+			friend ICpu * get_single_sk_cpu(const std::unique_ptr<Stat> &cstat);
 			friend std::ostream & operator<<(std::ostream &os, const ICpu &c);
 
 			virtual ~ICpu() = default;
@@ -48,6 +48,6 @@ namespace Cpu {
 	};
 
 	std::ostream & operator<<(std::ostream &os, const ICpu &c);
-	ICpu * get_single_sk_cpu(const std::unique_ptr<ICpu::Stat> &cstat);
+	ICpu * get_single_sk_cpu(const std::unique_ptr<ICpu::Stat> &cstat = nullptr);
 
 }
