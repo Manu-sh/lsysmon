@@ -25,13 +25,63 @@ static void progress(uint_fast32_t width, uint_fast32_t pct_progress, std::ostre
 	*it = cframe; ++it;
 }
 
+
+#include "src/utils/units.hpp"
+#include "src/cpu/details/proc/CpuInfo.hpp"
+#include "src/cpu/details/proc/Stat.hpp"
+
+#include "src/cpu/details/sysfs/cpu_n/Topology.hpp"
+#include "src/cpu/details/sysfs/cpu_n/Cache.hpp"
+#include "src/cpu/details/sysfs/cpu_n/Freq.hpp"
+
+using namespace Cpu::Details::Proc::CpuInfo;
+using namespace Cpu::Details::Proc::Stat;
+using namespace Cpu::Details::Sysfs::CpuN::Freq;
+using namespace Cpu::Details::Sysfs::CpuN::Cache;
+using namespace Cpu::Details::Sysfs::CpuN::Topology;
+using namespace Cpu::Details;
+
+#include "src/cpu/ICpu.hpp"
+
+#include <iostream>
+
+extern "C" {
+	#include <unistd.h>
+}
+
+using namespace std;
 int main() try {
+
+	for (;; sleep(2)) {
+
+// TODO: im not sure that work properly
+
+		const auto &stat_mon = Proc::Stat::get_cpu_stat();
+
+		auto ptr = Cpu::get_single_sk_cpu(stat_mon);	
+		const auto &usage = stat_mon->pct_usage();
+		const auto ncpu = usage.size();
+
+		// cout << *ptr << endl;
+
+		for (uint_fast8_t i = UINT8_C(0); i < ncpu; i++) {
+			progress(100, usage.at(i), std::ostream_iterator<char>(cout), '_', '#');
+			cout << units::to_string(usage.at(i), 2) << '%' << "\n";
+		}
+
+	}
+
+} catch (exception &e) {
+	::cerr << e.what() << endl;
+}
+
 
 	// cout << utils::String::map_file( std::string("/home/user/.bashrc") )<< endl;
 
+	//const auto ptr = Cpu::get_single_sk_cpu();
 
-#if 1
-	Cpu::Details::Proc::CpuStat cpu_stat;
+#if 0
+	const auto &cpu_stat = Cpu::Details::Proc::Stat::get_cpu_stat();
 
 	while (1) {
 
@@ -51,7 +101,3 @@ int main() try {
 
 	}
 #endif
-
-} catch (exception &e) {
-	::cerr << e.what() << endl;
-}
